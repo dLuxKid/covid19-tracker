@@ -8,6 +8,7 @@ import { fetchData } from "../Api";
 
 const Layout = () => {
 	const [data, setData] = useState({});
+	const [usStates, setUsStates] = useState("");
 
 	useEffect(() => {
 		async function covidData() {
@@ -17,11 +18,20 @@ const Layout = () => {
 		return () => {};
 	}, []);
 
+	const handleStateChange = (state) => {
+		async function stateData() {
+			const fetchedData = await fetchData(state);
+			setData(fetchedData);
+			setUsStates(state);
+		}
+		stateData();
+	};
+
 	return (
 		<main className='container'>
 			<Cards data={data} />
-			<CountryPicker />
-			<Chart />
+			<CountryPicker handleStateChange={handleStateChange} />
+			<Chart usState={usStates} data={data} />
 		</main>
 	);
 };
